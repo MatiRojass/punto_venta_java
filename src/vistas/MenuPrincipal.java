@@ -50,6 +50,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         });
 
         jButton3.setText("Punto de Venta");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -100,6 +105,13 @@ public class MenuPrincipal extends javax.swing.JFrame {
         gv.setLocationRelativeTo(null);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        PuntoVenta pv = new PuntoVenta(controlador);
+        pv.setVisible(true);
+        pv.setLocationRelativeTo(null);
+        this.dispose();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
