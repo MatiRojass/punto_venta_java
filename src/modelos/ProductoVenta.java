@@ -5,7 +5,7 @@ public class ProductoVenta {
     private final String id;
     private final String nombre;
     private final double precio;
-    private final int cantidad;
+    private int cantidad;
 
     public ProductoVenta(String id, String nombre, double precio, int cantidad) {
         if(cantidad <= 0) throw new ModeloException("La cantidad no puede ser 0 o menor.");
@@ -15,6 +15,10 @@ public class ProductoVenta {
         this.cantidad = cantidad;
     }
 
+    public void incrementarCantidad(){
+        cantidad++;
+    }
+    
     public String getId() {
         return id;
     }
