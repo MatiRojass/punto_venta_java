@@ -23,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import modelos.ModeloException;
 import modelos.Producto;
 import modelos.ProductoVenta;
 import shared.Result;
@@ -250,6 +251,11 @@ public class PuntoVenta extends javax.swing.JFrame {
         sell_btn.setText("VENDER");
         sell_btn.setToolTipText("");
         sell_btn.setFocusable(false);
+        sell_btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sell_btnActionPerformed(evt);
+            }
+        });
 
         clear_btn.setText("LIMPIAR LISTA");
         clear_btn.setFocusable(false);
@@ -476,6 +482,28 @@ public class PuntoVenta extends javax.swing.JFrame {
         cargarTablaCompras();
     }//GEN-LAST:event_clear_btnActionPerformed
 
+    private void sell_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sell_btnActionPerformed
+
+        if (compras.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe agregar productos para vender!");
+        }
+        if (compra_table.isEditing()) {
+            compra_table.getCellEditor().stopCellEditing();
+        }
+
+        System.out.println("Lista: " + compras);
+
+        Result<Void> res = controlador.createVenta(compras);
+
+        if (!res.isOk()) {
+            JOptionPane.showMessageDialog(this, res.getError());
+            return;
+        }
+
+        compras = new ArrayList<>();
+        cargarTablaCompras();
+    }//GEN-LAST:event_sell_btnActionPerformed
+
     private ProductoVenta estaEnLaLista(String id) {
         for (ProductoVenta pv : compras) {
             String pvId = pv.getId();
@@ -525,6 +553,7 @@ public class PuntoVenta extends javax.swing.JFrame {
     class SpinnerEditor extends AbstractCellEditor implements TableCellEditor {
 
         private final JSpinner spinner;
+        private Integer value = 1;
 
         public SpinnerEditor(int min, int max, int step) {
             spinner = new JSpinner(new SpinnerNumberModel(1, min, max, step));
@@ -532,7 +561,18 @@ public class PuntoVenta extends javax.swing.JFrame {
 
         @Override
         public Object getCellEditorValue() {
-            return spinner.getValue();
+            //obtener la fila  editada
+            int row = compra_table.getEditingRow();
+
+            //actualizar la cantidad en el producto en la lista
+            try {
+                compras.get(row).setCantidad((int) spinner.getValue());
+                this.value = (int) spinner.getValue();
+            } catch (ModeloException e) {
+                JOptionPane.showMessageDialog(rootPane, e.getMessage());
+            }
+
+            return this.value;
         }
 
         @Override
