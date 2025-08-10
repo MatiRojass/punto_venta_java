@@ -445,6 +445,7 @@ public class PuntoVenta extends javax.swing.JFrame {
 
         }
         cargarTablaCompras();
+        actualizarTotal();
     }//GEN-LAST:event_add_btnActionPerformed
 
     private void buscarProducto() {
@@ -502,6 +503,7 @@ public class PuntoVenta extends javax.swing.JFrame {
 
         compras = new ArrayList<>();
         cargarTablaCompras();
+        total_label.setText("0,00");
     }//GEN-LAST:event_sell_btnActionPerformed
 
     private ProductoVenta estaEnLaLista(String id) {
@@ -513,7 +515,11 @@ public class PuntoVenta extends javax.swing.JFrame {
         }
         return null;
     }
-
+    
+    private void actualizarTotal(){
+        double total = compras.stream().mapToDouble(ProductoVenta::calcularTotal).sum();
+        this.total_label.setText(String.format("%.2f",total));
+    }
     
     
     
@@ -532,6 +538,7 @@ public class PuntoVenta extends javax.swing.JFrame {
             button.setForeground(Color.white);
             button.addActionListener((var e) -> {
                 eliminarItemCompra(row);
+                actualizarTotal();
                 fireEditingStopped();
             });
         }
@@ -568,6 +575,7 @@ public class PuntoVenta extends javax.swing.JFrame {
             try {
                 compras.get(row).setCantidad((int) spinner.getValue());
                 this.value = (int) spinner.getValue();
+                actualizarTotal();
             } catch (ModeloException e) {
                 JOptionPane.showMessageDialog(rootPane, e.getMessage());
             }
